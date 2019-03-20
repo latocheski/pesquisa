@@ -17,6 +17,7 @@ class CreateGrupoProjetosTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->unsignedBigInteger('idUsuario');
+            $table->boolean('respondido')->default("0");
             $table->foreign('idUsuario')->references('id')->on('users');
             $table->unsignedBigInteger('idProjeto');
             $table->foreign('idProjeto')->references('id')->on('projetos');

@@ -14,7 +14,7 @@
 
                 @foreach($projetos as $key)
                     <div class="card mb-3">
-                        <h5 class="card-header">Questionário {{$key->id}}:</h5>
+                        <h5 class="card-header">Questionário:</h5>
                         <div class="card-body">
                             <h5 class="card-title">{{$key->instituicao}}</h5>
                             <p class="card-text">{{$key->descricao}}</p>
@@ -26,7 +26,8 @@
                         </div>
                     </div>
                 @endforeach
-                </div>
+                {!! $projetos->links() !!}
+                </div>                
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="{{ asset('js/fn.js') }}" defer></script>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -11,7 +12,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="slidecontainer">
                             <div class="row ml-1">
-                                {{_('Experiencia sobre o tema:')}}
+                                {{__('Experiencia sobre o tema:')}}
                             <p><span id="tema" class="badge badge-primary badge-pill ml-2"></span></p>
                             </div>
                             <input type="range" min="1" max="100" value="1" class="slider" id="stema">
@@ -21,7 +22,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="slidecontainer">
                             <div class="row ml-1">
-                            {{_('Experiencia sobre o REA:')}}
+                            {{__('Experiencia sobre o REA:')}}
                                 <p><span id="rea" class="badge badge-primary badge-pill ml-2"></span></p>
                             </div>
                             <input type="range" min="1" max="100" value="1" class="slider" id="srea">
@@ -31,7 +32,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="slidecontainer">
                             <div class="row ml-1">
-                            {{_('Experiencia em ensino:')}}
+                            {{__('Experiencia em ensino:')}}
                                 <p><span id="ensino" class="badge badge-primary badge-pill ml-2"></span></p>
                             </div>
                             <input type="range" min="1" max="100" value="1" class="slider" id="sensino">
@@ -41,7 +42,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="slidecontainer">
                             <div class="row ml-1">
-                            {{_('Conhecimento sobre o tema:')}}
+                            {{__('Conhecimento sobre o tema:')}}
                                 <p><span id="conhecimento" class="badge badge-primary badge-pill ml-2"></span></p>
                             </div>
                             <input type="range" min="1" max="100" value="1" class="slider" id="sconhecimento">
@@ -51,7 +52,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="slidecontainer">
                             <div class="row ml-1">
-                            {{_('Prática sobre o tema:')}}
+                            {{__('Prática sobre o tema:')}}
                                 <p><span id="pratica" class="badge badge-primary badge-pill ml-2"></span></p>
                             </div>
                             <input type="range" min="1" max="100" value="1" class="slider" id="spratica">
@@ -61,7 +62,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="slidecontainer">
                             <div class="row ml-1">
-                            {{_('Nível de formação:')}}
+                            {{__('Nível de formação:')}}
                                 <p><span id="formacao" class="badge badge-primary badge-pill ml-2"></span></p>
                             </div>
                             <input type="range" min="1" max="100" value="1" class="slider" id="sformacao">
@@ -71,7 +72,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="slidecontainer">
                             <div class="row ml-1">
-                            {{_('Experiencia em projetos de REA:')}}
+                            {{__('Experiencia em projetos de REA:')}}
                                 <p><span id="projeto" class="badge badge-primary badge-pill ml-2"></span></p>
                             </div>
                             <input type="range" min="1" max="100" value="1" class="slider" id="sprojeto">

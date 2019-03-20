@@ -10,7 +10,8 @@ class GrupoProjeto extends Model
         'id',
         'idUsuario',
         'idProjeto',
+        'respondido',
     ];
 
-    protected $table = "estados";
+    protected $table = "grupo_projetos";
 }
