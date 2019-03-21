@@ -31,6 +31,9 @@ Route::group(['middleware' => ['auth', 'perfil']], function () {
 
 Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/incluir', 'ProjetoController@index')->name('incluir');
+    Route::get('/perfilusuario', 'PerfilController@grafico')->name('gperfil');
+    Route::get('/selecao', 'GrupoProjetoController@selecao')->name('selecao');
+    Route::POST('/grafico/{id}', 'GrupoProjetoController@grafico')->name('grafico');
     Route::POST('/criar', 'ProjetoController@store')->name('criar');
     Route::get('/atribuir', 'GrupoProjetoController@index')->name('atribuir');
     Route::POST('/salvargrupo', 'GrupoProjetoController@store')->name('salvargrupo');

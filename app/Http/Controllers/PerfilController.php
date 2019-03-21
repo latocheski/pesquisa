@@ -57,6 +57,17 @@ class PerfilController extends Controller
         return redirect()->route('home');
     }
 
+    public function grafico()
+    {
+
+        $perfil = DB::table("perfil_usuarios")
+            ->select('perfil_usuarios.tema', 'perfil_usuarios.rea', 'perfil_usuarios.ensino', 'perfil_usuarios.conhecimento',
+            'perfil_usuarios.pratica', 'perfil_usuarios.formacao','perfil_usuarios.projetos')
+            ->get();
+            
+        return view('perfil.index', compact('perfil'));
+    }
+
     /**
      * Display the specified resource.
      *

@@ -58,6 +58,12 @@
                                 <a class="dropdown-item" href="{{route('atribuir')}}">
 									{{ __('Atribuir Projeto') }}
 								</a>
+                                <a class="dropdown-item" href="{{route('gperfil')}}">
+									{{ __('Gráfico perfil') }}
+								</a>
+                                <a class="dropdown-item" href="{{route('selecao')}}">
+									{{ __('Gráfico Projeto') }}
+								</a>
 								@endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

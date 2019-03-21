@@ -21,6 +21,21 @@ class GrupoProjetoController extends Controller
         return view('atribuir', compact('projeto'));
     }
 
+    public function selecao()
+    {
+        $projeto = Projeto::paginate(10);
+        return view('select', compact('projeto'));
+    }
+
+    public function grafico($id)
+    {
+        $dados = DB::table('avaliacao_questionarios')->where('idProjeto', '=', $id)
+        ->select('idQuestao', 'nota', 'idUsuario')
+        ->get()
+        ->groupby('idUsuario');
+        return view('grafico', compact('dados'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -57,9 +72,9 @@ class GrupoProjetoController extends Controller
             );
             $novos = array_diff($ids, $participantes);
             $velhos = array_diff($participantes, $ids);
-        } else {//sem participantes
-            DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idPesquisa'])->delete();//remove o grupo pois nenhum participante foi selecionado
-            DB::table('avaliacao_questionarios')->where('idProjeto', '=', $dados['idPesquisa'])->delete();//remove a avaliação caso ja respondida
+        } else { //sem participantes
+            DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idPesquisa'])->delete(); //remove o grupo pois nenhum participante foi selecionado
+            DB::table('avaliacao_questionarios')->where('idProjeto', '=', $dados['idPesquisa'])->delete(); //remove a avaliação caso ja respondida
         }
 
         if (!empty($novos)) { //cria novos participantes
@@ -75,7 +90,7 @@ class GrupoProjetoController extends Controller
         if (!empty($velhos)) { //remove participantes antigos
             foreach ($velhos as $idUsuario) {
                 $this->destroy($dados['idPesquisa'], $idUsuario);
-                DB::table('avaliacao_questionarios')->where('idProjeto', '=', $dados['idPesquisa'], 'and', 'idUsuario', '=', $idUsuario)->delete();//remove a avaliação
+                DB::table('avaliacao_questionarios')->where('idProjeto', '=', $dados['idPesquisa'], 'and', 'idUsuario', '=', $idUsuario)->delete(); //remove a avaliação
             }
         }
 

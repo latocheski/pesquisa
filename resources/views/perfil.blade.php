@@ -81,13 +81,13 @@
 						</li>
 
 					</div>
-					<div class="mb-2 mr-2">
+					<div class="mb-2 mr-3">
 						<div class="float-right">
 							<div class="form-group row mb-0">
 								<div class="col-md-6 d-flex flex-row">
-									<button type="submit" class="ml-2 btn btn-primary">
+									<button type="submit" class="ml-2 btn btn-primary mb-3">
 										<i class="fas fa-save mr-2"></i>
-										{{ __('Enviar') }}
+										{{ __('Salvar') }}
 									</button>
 								</div>
 							</div>
