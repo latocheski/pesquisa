@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\PerfilUsuario;
+use Auth;
+use DB;
 use Illuminate\Http\Request;
 
 class PerfilController extends Controller
@@ -13,6 +16,11 @@ class PerfilController extends Controller
      */
     public function index()
     {
+        $id = auth()->user()->id;
+        $row = DB::table('perfil_usuarios')->where('idUsuario', '=', $id)->get();
+        if (!$row->isEmpty()) {
+            return redirect('home');
+        }
         return view('perfil');
     }
 
@@ -34,7 +42,19 @@ class PerfilController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dados = $request->all();
+        PerfilUsuario::create([
+            'idUsuario' => auth()->user()->id,
+            'tema' => $dados['tema'],
+            'rea' => $dados['rea'],
+            'ensino' => $dados['ensino'],
+            'conhecimento' => $dados['conhecimento'],
+            'pratica' => $dados['pratica'],
+            'formacao' => $dados['formacao'],
+            'projetos' => $dados['projeto'],
+        ]);
+
+        return redirect()->route('home');
     }
 
     /**

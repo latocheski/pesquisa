@@ -1,12 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-
+<div class="container-fluid">
 <div class="row justify-content-center">
     <div class="col-md-9">
+    <div class="card">
+    <div class="card-header">Atribua um valor para os seguintes itens:</div>
+    <form method="post" action="{{ route('enviar') }}">
+    @csrf
+    <div class="card-body">
     <?php $index = 0; ?>
     <div class="row">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <div class="nav flex-column nav-pills"  id="v-pills-tab" role="tablist" aria-orientation="vertical" >
         @foreach($questoes as $q)    
                 <a class="nav-link mr-3 {{$index == 0 ? 'active' : ''}}" id="v-pills-{{$q[0]->area}}-tab" data-toggle="pill" href="#v-pills-{{$q[0]->area}}" role="tab" aria-controls="v-pills-{{$q[0]->area}}" aria-selected="true">{{$q[0]->area}}</a>
                 <?php $index++; ?>
@@ -32,14 +37,17 @@
             
             {{$pergunta->questao}}
             <br>
-            
-            <input type="range" min="1" max="100" value="1" class="slider" id="">
+            <p><span id="tema" class="badge badge-primary badge-pill ml-2">{{$pergunta->idq}}</span></p>
+            <input type="range" min="1" max="100" value="1" class="slider" id="" name="{{$pergunta->idq}}">
             @endforeach
             </div>
         <?php $index++;?>
         @endforeach
+        {!! Form::hidden('idProjeto', $idP) !!}
+            </form>
         </div>
     </div>
+</div>
 </div>
 
 @endsection

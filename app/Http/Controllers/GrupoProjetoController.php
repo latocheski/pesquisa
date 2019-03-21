@@ -57,14 +57,15 @@ class GrupoProjetoController extends Controller
             );
             $novos = array_diff($ids, $participantes);
             $velhos = array_diff($participantes, $ids);
-        } else {
-            DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idPesquisa'])->delete();
+        } else {//sem participantes
+            DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idPesquisa'])->delete();//remove o grupo pois nenhum participante foi selecionado
+            DB::table('avaliacao_questionarios')->where('idProjeto', '=', $dados['idPesquisa'])->delete();//remove a avaliação caso ja respondida
         }
 
         if (!empty($novos)) { //cria novos participantes
-            foreach ($novos as $key) {
+            foreach ($novos as $idUsuario) {
                 GrupoProjeto::create([
-                    'idUsuario' => $key,
+                    'idUsuario' => $idUsuario,
                     'respondido' => 0,
                     'idProjeto' => $dados['idPesquisa'],
                 ]);
@@ -72,8 +73,9 @@ class GrupoProjetoController extends Controller
         }
 
         if (!empty($velhos)) { //remove participantes antigos
-            foreach ($velhos as $key) {
-                $this->destroy($dados['idPesquisa'], $key);
+            foreach ($velhos as $idUsuario) {
+                $this->destroy($dados['idPesquisa'], $idUsuario);
+                DB::table('avaliacao_questionarios')->where('idProjeto', '=', $dados['idPesquisa'], 'and', 'idUsuario', '=', $idUsuario)->delete();//remove a avaliação
             }
         }
 

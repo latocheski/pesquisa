@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\AvaliacaoQuestionario;
+use Auth;
 use DB;
+use Illuminate\Http\Request;
 
 class AvaliacaoQuestionarioController extends Controller
 {
@@ -12,16 +14,16 @@ class AvaliacaoQuestionarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($idP)
     {
 
         $questoes = DB::table("questoes")
-        ->select('questoes.*', 'areas.area as area', 'areas.*')
-        ->join('areas', 'questoes.idArea', '=', 'areas.id')
-        ->get()
-        ->groupBy('area');
-        
-        return view('questionario', compact('questoes'));
+            ->select('questoes.*', 'questoes.id as idq', 'areas.area as area', 'areas.*')
+            ->join('areas', 'questoes.idArea', '=', 'areas.id')
+            ->get()
+            ->groupBy('area');
+
+        return view('questionario', compact('questoes', "idP"));
     }
 
     /**
@@ -42,7 +44,27 @@ class AvaliacaoQuestionarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $dados = $request->all();
+        $idU = auth()->user()->id;
+
+        foreach ($dados as $key => $value) {
+            if($key != "_token" && $key != "idProjeto") {
+                AvaliacaoQuestionario::create([
+                    'idUsuario' => $idU,
+                    'idQuestao' => $key,
+                    'nota' => $value,
+                    'idProjeto' => $dados['idProjeto'],
+                ]);
+            }
+            
+        }
+        DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idProjeto'])
+        ->update(['respondido' => 1]);
+
+        return redirect()->route('home');
+
+
     }
 
     /**

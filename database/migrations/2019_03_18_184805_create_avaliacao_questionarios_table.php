@@ -20,8 +20,7 @@ class CreateAvaliacaoQuestionariosTable extends Migration
             $table->foreign('idUsuario')->references('id')->on('users');
             $table->unsignedBigInteger('idQuestao');
             $table->foreign('idQuestao')->references('id')->on('questoes');
-            $table->unsignedBigInteger('idArea');
-            $table->foreign('idArea')->references('id')->on('areas');
+            $table->integer('nota');
             $table->unsignedBigInteger('idProjeto');
             $table->foreign('idProjeto')->references('id')->on('projetos');
         });

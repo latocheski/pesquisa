@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class AvaliacaoQuestionario extends Model
 {
     protected $fillable = [
-        'id',
         'idUsuario',
         'idQuestao',
-        'idArea',  
+        'nota',  
         'idProjeto',
     ];
 
