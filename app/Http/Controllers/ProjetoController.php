@@ -37,7 +37,7 @@ class ProjetoController extends Controller
     {
         $dados = $request->all();
         Projeto::create($dados);
-        return redirect()->route('home')->with('success', 'Projeto criado com sucesso.');
+        return redirect()->route('atribuir')->with('success', 'Projeto criado com sucesso.');
     }
 
     /**

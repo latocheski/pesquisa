@@ -62,8 +62,7 @@ class AvaliacaoQuestionarioController extends Controller
         DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idProjeto'])
         ->update(['respondido' => 1]);
 
-        return redirect()->route('home');
-
+        return redirect()->route('home')->with('success', 'Questionário avaliado com sucesso.');
 
     }
 

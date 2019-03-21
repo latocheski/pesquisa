@@ -1,10 +1,17 @@
-var slider = document.getElementById("stema");
+$(document).ready(function () {
+    var slider = [],
+        output = []
 
-var output = document.getElementById("tema");
+    questoes.forEach(quest => {
+        slider.push(document.getElementById(quest.idq))
+        output.push(document.getElementById(quest.idq + "s"))
+    });
+    for (let index = 0; index < slider.length; index++) {
 
-output.innerHTML = slider.value;
+        output[index].innerHTML = slider[index].value;
 
-slider.oninput = function () {
-    output.innerHTML = this.value;
-}
-
+        slider[index].oninput = function () {
+            output[index].innerHTML = this.value;
+        }
+    }
+});

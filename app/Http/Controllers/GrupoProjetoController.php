@@ -28,7 +28,7 @@ class GrupoProjetoController extends Controller
      */
     public function participantes($idatual)
     {
-        $usuarios = User::all();
+        $usuarios = User::where('adm', '<>', '1')->get();
         $grupo = DB::table('grupo_projetos')->where('idProjeto', '=', $idatual)->get();
         return view('participantes', compact('usuarios', 'grupo', 'idatual'));
     }
