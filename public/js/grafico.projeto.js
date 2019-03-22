@@ -17,7 +17,56 @@ $(document).ready(function () {
 
     indice /= (valores.length);
 
-    $("#indice").append("= " + indice.toFixed(2));
+    var opts = {
+        angle: -0.1, 
+        lineWidth: 0.07,
+        radiusScale: 1, 
+        pointer: {
+          length: 0.5,
+          strokeWidth: 0.046, 
+          color: '#000000' 
+        },
+        staticZones: [
+            {strokeStyle: "#F03E3E", min: 0, max: 20}, 
+            {strokeStyle: "#FFDD00", min: 21, max: 60}, 
+            {strokeStyle: "#30B32D", min: 61, max: 100}, 
+         ],
+         staticLabels: {
+            font: "12px sans-serif", 
+            labels: [0,10,20,30,40,50,60,70,80,90,100],  
+            color: "#000000",  
+            fractionDigits: 0  
+          },
+        limitMax: false,     
+        limitMin: false,     
+        generateGradient: true,
+        highDpiSupport: true, 
+        renderTicks: {
+          divisions: 10,
+          divWidth: 0.7,
+          divLength: 0.5,
+          divColor: '#333333',
+          subDivisions: 5,
+          subLength: 0.3,
+          subWidth: 0.5,
+          subColor: '#666666'
+        },
+        colorStart: '#6FADCF',
+        colorStop: '#8FC0DA',   
+        strokeColor: '#E0E0E0',
+        generateGradient: true,
+        highDpiSupport: true,    
+        
+      };
+      var target = document.getElementById('indice');
+      var gauge = new Gauge(target).setOptions(opts);      
+      gauge.maxValue = 100;
+      gauge.setMinValue(0); 
+      gauge.animationSpeed = 32; 
+      gauge.set(indice);
+      target.title = indice;
+
+    $("#numero").append("Índice = " + indice.toFixed(2));
 
     myChart = new Chart(ctx, {
         type: 'bar',
@@ -33,7 +82,8 @@ $(document).ready(function () {
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        max: 100
                     }
                 }]
             },
@@ -59,7 +109,5 @@ $(document).ready(function () {
         }
         return color;
     }
-
-
 
 });
