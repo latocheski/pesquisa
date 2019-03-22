@@ -32,6 +32,8 @@ class GrupoProjetoController extends Controller
     {
         $somatoriaGeral = 0;
         $coeficienteDiretriz = [];
+
+        $projeto = Projeto::find($id);
         
         $perfilProjeto = DB::table('grupo_projetos')
         ->where('idProjeto', '=', $id, 'and', 'respondido', '=', 1)
@@ -56,7 +58,7 @@ class GrupoProjetoController extends Controller
         foreach ($perfilProjeto as $key => $value) {
             foreach ($value as $chave => $valor) {  
                 if($chave === "somatorio") {
-                    $perfilProjeto[$key]->somatorio = (intval($valor)/$somatoriaGeral); 
+                    $perfilProjeto[$key]->somatorio = round(intval($valor)/$somatoriaGeral, 3); 
                 }                   
             }            
         }
@@ -69,7 +71,7 @@ class GrupoProjetoController extends Controller
                 
             }
         }
-        dump ($coeficienteDiretriz);
+        
 
         //return dump($perfilProjeto);
 
@@ -79,7 +81,7 @@ class GrupoProjetoController extends Controller
         ->groupby('idUsuario');
 
 
-        return view('grafico', compact('dados'));
+        return view('grafico', compact('coeficienteDiretriz', 'projeto'));
     }
 
     public function pesquisaUsuario($nota, $perfil) {
