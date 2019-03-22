@@ -29,8 +29,9 @@
 									<td>{{$proj->instituicao}}</td>
 									<td>
 										@csrf {{ method_field('SUBMIT') }}
-										{!! Form::model($proj, ['method' => 'POST', 'route' => ['grafico', $proj->id]]) !!}
+										{!! Form::model($proj, ['method' => 'POST', 'route' => ['grafico']]) !!}
 										{!! Form::hidden('id', $proj->id) !!}
+										{!! Form::hidden('idArea', 0) !!}
 										{!! Form::button('Visualizar', ['type' => 'submit', 'class' => 'btn btn-success'] ) !!}
 										{!! Form::close() !!}
 									</td>

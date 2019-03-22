@@ -1,13 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container border rounded">
 	<div class="row mb-5">
 		<div class="col text-center">
 			<h1>{{$projeto->descricao}}</h1>
 			<hr>
+			@csrf {{ method_field('SUBMIT') }}
+			{!! Form::model($projeto, ['method' => 'POST', 'route' => ['grafico']]) !!}
+
+			{!! Form::hidden('id', $projeto->id) !!}
+				<div class="input-group mb-3">
+
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="idArea">Selecione a área:</label>
+						</div>
+
+						<select class="custom-select" id="idArea" name="idArea">
+								<option value="0">Todas</option>
+							@foreach($areas as $area)
+								@if($area->id == $idAreaPesquisa)
+									<option selected value="{{$area->id}}">{{$area->area}}</option>
+								@else
+								<option value="{{$area->id}}">{{$area->area}}</option>
+								@endif
+							@endforeach
+						</select>
+					</div>
+				</div>
+				{!! Form::close() !!}
 		</div>
-	</div>
 	<div class="row">
 		<div class="col-md-8">
 			<canvas id="myChart" width="400" height="200"></canvas>

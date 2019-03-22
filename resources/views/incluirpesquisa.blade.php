@@ -7,6 +7,7 @@
 			<div class="card">
 				<div class="card-header">Novo projeto:</div>
 				<div class="card-body">
+				@include('alertas')
 					<form method="POST" action="{{ route('criar') }}">
 						@csrf
 						<div class="form-group">

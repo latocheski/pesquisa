@@ -7,7 +7,6 @@ $(document).ready(function () {
         valores = []
     cores = [], indice = 0;
 
-
     $.each(dados, function (key, value) {
         colunas.push(key);
         valores.push(value)
@@ -46,7 +45,7 @@ $(document).ready(function () {
           divWidth: 0.7,
           divLength: 0.5,
           divColor: '#333333',
-          subDivisions: 5,
+          subDivisions: 10,
           subLength: 0.3,
           subWidth: 0.5,
           subColor: '#666666'
@@ -62,11 +61,11 @@ $(document).ready(function () {
       var gauge = new Gauge(target).setOptions(opts);      
       gauge.maxValue = 100;
       gauge.setMinValue(0); 
-      gauge.animationSpeed = 32; 
-      gauge.set(indice);
-      target.title = indice;
+      gauge.animationSpeed = 22; 
+      gauge.set(isNaN(indice) ? 0 : indice);
+      target.title = indice.toFixed(2);      
 
-    $("#numero").append("Índice = " + indice.toFixed(2));
+    $("#numero").append("Índice = " + (isNaN(indice) ? 0 : indice.toFixed(2)));
 
     myChart = new Chart(ctx, {
         type: 'bar',
@@ -99,6 +98,11 @@ $(document).ready(function () {
             }
 
         }
+    });
+
+
+    $('#idArea').on('change', function(e){
+        $(this).closest('form').submit();
     });
 
     function getRandomColorHex() {

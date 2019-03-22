@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Area;
 use App\GrupoProjeto;
 use App\Projeto;
 use App\User;
 use DB;
-use App\PerfilUsuario;
 use Illuminate\Http\Request;
 
 class GrupoProjetoController extends Controller
@@ -28,65 +28,60 @@ class GrupoProjetoController extends Controller
         return view('select', compact('projeto'));
     }
 
-    public function grafico($id)
+    public function grafico(request $request)
     {
+        $id = $request['id'];
         $somatoriaGeral = 0;
         $coeficienteDiretriz = [];
-
         $projeto = Projeto::find($id);
-        
+        $areas = Area::all();
+        $idAreaPesquisa = $request['idArea'] == null ? 0 : $request['idArea'];
+
         $perfilProjeto = DB::table('grupo_projetos')
-        ->where('idProjeto', '=', $id, 'and', 'respondido', '=', 1)
-        ->select('perfil_usuarios.somatorio', 'perfil_usuarios.idUsuario')
-        ->join('perfil_usuarios', 'grupo_projetos.idUsuario', '=', 'perfil_usuarios.idUsuario')
-        ->get()
-        ->toarray();
+            ->where('idProjeto', '=', $id, 'and', 'respondido', '=', 1)
+            ->select('perfil_usuarios.somatorio', 'perfil_usuarios.idUsuario')
+            ->join('perfil_usuarios', 'grupo_projetos.idUsuario', '=', 'perfil_usuarios.idUsuario')
+            ->get()
+            ->toarray();
 
-        $respostas = DB::table('avaliacao_questionarios')->where('idProjeto', '=', $id)
-        ->select('idQuestao', 'nota', 'idUsuario')
-        ->get()
-        ->groupby('idUsuario');
-
-
+        $respostas = DB::table('avaliacao_questionarios')
+            ->select('idQuestao', 'nota', 'idUsuario', 'questoes.idArea')
+            ->join('questoes', 'avaliacao_questionarios.idQuestao', 'questoes.id')
+            ->where('questoes.idArea', ($idAreaPesquisa == 0 ? '<>' : '='), $idAreaPesquisa)
+            ->where('idProjeto', '=', $id)
+            ->get()
+            ->groupby('idUsuario');
 
         foreach ($perfilProjeto as $key => $value) {
             foreach ($value as $valor) {
-               $somatoriaGeral += intval($valor);
+                $somatoriaGeral += intval($valor);
             }
         }
 
         foreach ($perfilProjeto as $key => $value) {
-            foreach ($value as $chave => $valor) {  
-                if($chave === "somatorio") {
-                    $perfilProjeto[$key]->somatorio = round(intval($valor)/$somatoriaGeral, 3); 
-                }                   
-            }            
+            foreach ($value as $chave => $valor) {
+                if ($chave === "somatorio") {
+                    $perfilProjeto[$key]->somatorio = round(intval($valor) / $somatoriaGeral, 3);
+                }
+            }
         }
 
         foreach ($respostas as $key => $value) {
             foreach ($value as $chave => $valor) {
-                foreach ($valor as $chaveUsuario => $valorChave) {                
+                foreach ($valor as $chaveUsuario => $valorChave) {
                     $coeficienteDiretriz[$valor->idQuestao] = $this->pesquisaUsuario($valor, $perfilProjeto);
                 }
-                
             }
         }
-        
-
-        //return dump($perfilProjeto);
-
-        $dados = DB::table('avaliacao_questionarios')->where('idProjeto', '=', $id)
-        ->select('idQuestao', 'nota', 'idUsuario')
-        ->get()
-        ->groupby('idUsuario');
 
 
-        return view('grafico', compact('coeficienteDiretriz', 'projeto'));
+        return view('grafico', compact('coeficienteDiretriz', 'projeto', 'areas', 'idAreaPesquisa'));
     }
 
-    public function pesquisaUsuario($nota, $perfil) {
+    public function pesquisaUsuario($nota, $perfil)
+    {
         foreach ($perfil as $key) {
-            if($key->idUsuario == $nota->idUsuario) {
+            if ($key->idUsuario == $nota->idUsuario) {
                 $calculo = $key->somatorio * $nota->nota;
                 return $calculo;
             }

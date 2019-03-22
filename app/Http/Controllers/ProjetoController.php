@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Projeto;
+use Validator;
+use Illuminate\Http\Request;
 
 class ProjetoController extends Controller
 {
@@ -33,8 +34,22 @@ class ProjetoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    private function validar($request)
+    {
+        $validator = Validator::make($request->all(), [
+            "descricao" => "required",
+            "instituicao" => "required",
+        ]);
+        return $validator;
+    }
+
     public function store(Request $request)
     {
+        $validator = $this->validar($request);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
         $dados = $request->all();
         Projeto::create($dados);
         return redirect()->route('atribuir')->with('success', 'Projeto criado com sucesso.');
