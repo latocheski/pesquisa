@@ -25,6 +25,7 @@ class CreatePerfilUsuariosTable extends Migration
             $table->integer('pratica');
             $table->integer('formacao');
             $table->integer('projetos');
+            $table->integer('somatorio');
         });
     }
 

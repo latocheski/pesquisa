@@ -6,6 +6,7 @@ use App\GrupoProjeto;
 use App\Projeto;
 use App\User;
 use DB;
+use App\PerfilUsuario;
 use Illuminate\Http\Request;
 
 class GrupoProjetoController extends Controller
@@ -29,11 +30,65 @@ class GrupoProjetoController extends Controller
 
     public function grafico($id)
     {
+        $somatoriaGeral = 0;
+        $coeficienteDiretriz = [];
+        
+        $perfilProjeto = DB::table('grupo_projetos')
+        ->where('idProjeto', '=', $id, 'and', 'respondido', '=', 1)
+        ->select('perfil_usuarios.somatorio', 'perfil_usuarios.idUsuario')
+        ->join('perfil_usuarios', 'grupo_projetos.idUsuario', '=', 'perfil_usuarios.idUsuario')
+        ->get()
+        ->toarray();
+
+        $respostas = DB::table('avaliacao_questionarios')->where('idProjeto', '=', $id)
+        ->select('idQuestao', 'nota', 'idUsuario')
+        ->get()
+        ->groupby('idUsuario');
+
+
+
+        foreach ($perfilProjeto as $key => $value) {
+            foreach ($value as $valor) {
+               $somatoriaGeral += intval($valor);
+            }
+        }
+
+        foreach ($perfilProjeto as $key => $value) {
+            foreach ($value as $chave => $valor) {  
+                if($chave === "somatorio") {
+                    $perfilProjeto[$key]->somatorio = (intval($valor)/$somatoriaGeral); 
+                }                   
+            }            
+        }
+
+        foreach ($respostas as $key => $value) {
+            foreach ($value as $chave => $valor) {
+                foreach ($valor as $chaveUsuario => $valorChave) {                
+                    $coeficienteDiretriz[$valor->idQuestao] = $this->pesquisaUsuario($valor, $perfilProjeto);
+                }
+                
+            }
+        }
+        dump ($coeficienteDiretriz);
+
+        //return dump($perfilProjeto);
+
         $dados = DB::table('avaliacao_questionarios')->where('idProjeto', '=', $id)
         ->select('idQuestao', 'nota', 'idUsuario')
         ->get()
         ->groupby('idUsuario');
+
+
         return view('grafico', compact('dados'));
+    }
+
+    public function pesquisaUsuario($nota, $perfil) {
+        foreach ($perfil as $key) {
+            if($key->idUsuario == $nota->idUsuario) {
+                $calculo = $key->somatorio * $nota->nota;
+                return $calculo;
+            }
+        }
     }
 
     /**

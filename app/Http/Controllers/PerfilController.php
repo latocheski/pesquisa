@@ -43,6 +43,13 @@ class PerfilController extends Controller
     public function store(Request $request)
     {
         $dados = $request->all();
+        $soma =0;
+        foreach ($dados as $key => $value) {
+            if ($key != "idUsuario") {
+                $soma += intval($value);
+            }
+        }
+
         PerfilUsuario::create([
             'idUsuario' => auth()->user()->id,
             'tema' => $dados['tema'],
@@ -52,6 +59,7 @@ class PerfilController extends Controller
             'pratica' => $dados['pratica'],
             'formacao' => $dados['formacao'],
             'projetos' => $dados['projeto'],
+            'somatorio' => $soma,
         ]);
 
         return redirect()->route('home');

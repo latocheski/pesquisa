@@ -16,6 +16,7 @@ class PerfilUsuario extends Model
         'pratica',
         'formacao',
         'projetos',
+        'somatorio',
     ];
 
     protected $table = "perfil_usuarios";
