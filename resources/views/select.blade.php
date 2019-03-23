@@ -6,7 +6,7 @@
 		<div class="col-md-6">
 
 			<div class="card">
-				<div class="card-header">Atribuir pesquisa:</div>
+				<div class="card-header">Selecionar Projeto:</div>
 				<div class="card-body">
 					<div class="table-responsive table-striped">
 						@if($projeto->isEmpty())

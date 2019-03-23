@@ -45,6 +45,8 @@ class AvaliacaoQuestionarioController extends Controller
     public function store(Request $request)
     {
 
+        
+
         $dados = $request->all();
         $idU = auth()->user()->id;
 
@@ -59,7 +61,7 @@ class AvaliacaoQuestionarioController extends Controller
             }
             
         }
-        DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idProjeto'])
+        DB::table('grupo_projetos')->where('idUsuario', '=', $idU, 'and', 'idProjeto', '=', $dados['idProjeto'])
         ->update(['respondido' => 1]);
 
         return redirect()->route('home')->with('success', 'Questionário avaliado com sucesso.');

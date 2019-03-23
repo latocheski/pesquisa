@@ -3,6 +3,8 @@ $(document).ready(function () {
     var ctx = document.getElementById('myChart').getContext('2d');
     var ctx = $('#myChart');
     var ctx = 'myChart';
+    var target = document.getElementById('indice');
+    var gauge;  
     var colunas = [],
         valores = []
     cores = [], indice = 0;
@@ -56,9 +58,8 @@ $(document).ready(function () {
         generateGradient: true,
         highDpiSupport: true,    
         
-      };
-      var target = document.getElementById('indice');
-      var gauge = new Gauge(target).setOptions(opts);      
+      };  
+      gauge = new Gauge(target).setOptions(opts);  
       gauge.maxValue = 100;
       gauge.setMinValue(0); 
       gauge.animationSpeed = 22; 
