@@ -128,6 +128,9 @@ class GrupoProjetoController extends Controller
             $velhos = array_diff($participantes, $ids);
         } else { //sem participantes
             DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idPesquisa'])->delete(); //remove o grupo pois nenhum participante foi selecionado
+            DB::table('avaliacao_questionarios')
+            ->where('idProjeto', '=', $dados['idPesquisa'])
+            ->delete(); //remove a avaliação
         }
 
         if (!empty($novos)) { //cria novos participantes
