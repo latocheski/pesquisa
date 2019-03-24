@@ -17,11 +17,9 @@ class PerfilController extends Controller
     public function index()
     {
         $id = auth()->user()->id;
-        $row = DB::table('perfil_usuarios')->where('idUsuario', '=', $id)->get();
-        if (!$row->isEmpty()) {
-            return redirect('home');
-        }
-        return view('perfil');
+        $row = DB::table('perfil_usuarios')->where('idUsuario', '=', $id)->first();
+
+        return view('perfil', compact('row'));
     }
 
     /**
@@ -43,12 +41,7 @@ class PerfilController extends Controller
     public function store(Request $request)
     {
         $dados = $request->all();
-        $soma =0;
-        foreach ($dados as $key => $value) {
-            if ($key != "idUsuario") {
-                $soma += intval($value);
-            }
-        }
+        $soma = $this->somatorio($request);        
 
         PerfilUsuario::create([
             'idUsuario' => auth()->user()->id,
@@ -96,7 +89,32 @@ class PerfilController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $dados = $request->all();
+
+        $usuario = PerfilUsuario::find($id);
+        $usuario->tema = $request->get('tema');
+        $usuario->rea = $request->get('rea');
+        $usuario->ensino = $request->get('ensino');
+        $usuario->conhecimento = $request->get('conhecimento');
+        $usuario->pratica = $request->get('pratica');
+        $usuario->formacao = $request->get('formacao');
+        $usuario->projetos = $request->get('projeto');
+        $usuario->somatorio = $this->somatorio($request);
+        $usuario->save();
+        
+        return redirect()->route('home')
+            ->with('success', 'Perfil atualizado com sucesso.');
+    }
+
+    public function somatorio(Request $request)
+    {
+        $itens = ['tema', 'rea', 'ensino', 'conhecimento', 'pratica', 'formacao', 'projeto'];
+        $soma = 0;        
+        
+        foreach ($itens as  $item) {  
+            $soma += $request->get($item);
+        }
+        return $soma;
     }
 
     /**

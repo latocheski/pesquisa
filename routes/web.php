@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth', 'perfil']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::POST('/avaliar/{id}', 'AvaliacaoQuestionarioController@index')->name('avaliar');
     Route::POST('/enviar', 'AvaliacaoQuestionarioController@store')->name('enviar');
+    Route::POST('/updateperfil/{id}', 'PerfilController@update')->name('perfil.update');
 });
 
 Route::group(['middleware' => ['admin', 'auth']], function () {
