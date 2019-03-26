@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAreasTable extends Migration
+class QuestoesPerfil extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateAreasTable extends Migration
      */
     public function up()
     {
-        Schema::create('areas', function (Blueprint $table) {
+        Schema::create('questoes_perfil', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->string('area');
-            $table->string('prefixo', 500);
+            $table->string('questao', 500);  
+            $table->boolean('ativo')->default(1);  
         });
     }
 
@@ -28,6 +28,6 @@ class CreateAreasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('areas');
+        Schema::dropIfExists('questoes_perfil');
     }
 }

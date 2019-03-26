@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PerfilUsuario;
+use App\QuestoesPerfil;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -17,9 +18,15 @@ class PerfilController extends Controller
     public function index()
     {
         $id = auth()->user()->id;
-        $row = DB::table('perfil_usuarios')->where('idUsuario', '=', $id)->first();
+        $questoes = QuestoesPerfil::all()->toarray();
+        $row = DB::table('perfil_usuarios')
+            ->select('idQuestaoPerfil', 'nota')
+            ->where('idUsuario', '=', $id)
+            ->get()
+            ->groupby('idQuestaoPerfil')
+            ->toarray();
 
-        return view('perfil', compact('row'));
+        return view('perfil', compact('row', 'questoes'));
     }
 
     /**
@@ -40,20 +47,16 @@ class PerfilController extends Controller
      */
     public function store(Request $request)
     {
-        $dados = $request->all();
-        $soma = $this->somatorio($request);        
+        $dados = $request->except('_token', '_method');
+        $user = auth()->user()->id;
 
-        PerfilUsuario::create([
-            'idUsuario' => auth()->user()->id,
-            'tema' => $dados['tema'],
-            'rea' => $dados['rea'],
-            'ensino' => $dados['ensino'],
-            'conhecimento' => $dados['conhecimento'],
-            'pratica' => $dados['pratica'],
-            'formacao' => $dados['formacao'],
-            'projetos' => $dados['projeto'],
-            'somatorio' => $soma,
-        ]);
+        foreach ($dados as $key => $value) {
+            PerfilUsuario::create([
+                'idUsuario' => intval($user),
+                'idQuestaoPerfil' => intval($key),
+                'nota' => intval($value),
+            ]);
+        }
 
         return redirect()->route('home');
     }
@@ -89,32 +92,17 @@ class PerfilController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $dados = $request->all();
+        $dados = $request->except('_token', '_method');
 
-        $usuario = PerfilUsuario::find($id);
-        $usuario->tema = $request->get('tema');
-        $usuario->rea = $request->get('rea');
-        $usuario->ensino = $request->get('ensino');
-        $usuario->conhecimento = $request->get('conhecimento');
-        $usuario->pratica = $request->get('pratica');
-        $usuario->formacao = $request->get('formacao');
-        $usuario->projetos = $request->get('projeto');
-        $usuario->somatorio = $this->somatorio($request);
-        $usuario->save();
-        
+        foreach ($dados as $key => $value) {
+            DB::table('perfil_usuarios')
+                ->where('idUsuario', '=', $id)
+                ->where('idQuestaoPerfil', '=', $key)
+                ->update(['nota' => $value]);
+        }
+
         return redirect()->route('home')
             ->with('success', 'Perfil atualizado com sucesso.');
-    }
-
-    public function somatorio(Request $request)
-    {
-        $itens = ['tema', 'rea', 'ensino', 'conhecimento', 'pratica', 'formacao', 'projeto'];
-        $soma = 0;        
-        
-        foreach ($itens as  $item) {  
-            $soma += $request->get($item);
-        }
-        return $soma;
     }
 
     /**

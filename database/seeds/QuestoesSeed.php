@@ -7,7 +7,7 @@ class QuestoesSeed extends Seeder
 {
     /**
      * Run the database seeds.
-     *
+     *            
      * @return void
      */
     public function run()
@@ -16,7 +16,7 @@ class QuestoesSeed extends Seeder
             1 => array(
                 "No processo de design foram identificadas questões culturais para subsidiar a criação ou adaptação do REA?",
                 "Foram identificados os potenciais e os limites de se representar uma determinada questão cultural?",
-                "Foram estabelecidos planos para representar as questões culturais identificadas?",
+                "Foram estabelecidos planos para representar as questões culturais identificadas?",                
             ),
             2 => array(
                 "Houve a participação de representantes dos futuros usuários do REA durante o design?",
@@ -50,16 +50,16 @@ class QuestoesSeed extends Seeder
             ),
         );
 
-        $id = 1;
+        
 
-        foreach ($questoes as $idarea) {
-            foreach ($idarea as $pergunta) {
+        foreach ($questoes as $idarea => $chave) {
+            foreach ($chave as $prefixo => $pergunta) {
                 Questoes::create([
                     'questao' => $pergunta,
-                    'idArea' => $id,
+                    'idArea' => $idarea,
                 ]);
             }
-            $id++;
+            
         }
     }
 }

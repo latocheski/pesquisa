@@ -19,6 +19,7 @@ class CreateQuestoesTable extends Migration
             $table->string('questao', 500);
             $table->unsignedBigInteger('idArea');
             $table->foreign('idArea')->references('id')->on('areas');
+            $table->boolean('ativo')->default(1);  
         });
     }
 

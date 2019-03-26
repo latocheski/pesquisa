@@ -32,7 +32,12 @@ Route::group(['middleware' => ['auth', 'perfil']], function () {
 
 Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/incluir', 'ProjetoController@index')->name('incluir');
+    Route::get('/criardiretriz', 'QuestoesController@index')->name('criardiretriz');
+    Route::post('/salvardiretriz', 'QuestoesController@store')->name('salvardiretriz');
     Route::get('/selecao', 'GrupoProjetoController@selecao')->name('selecao');
+    Route::get('/listardiretriz', 'QuestoesController@listar')->name('listar.diretriz');
+    Route::POST('/editardiretriz/{id}', 'QuestoesController@edit')->name('editar.diretriz');
+    Route::POST('/updatediretriz/{id}', 'QuestoesController@update')->name('update.diretriz');
     Route::POST('/modal', 'GrupoProjetoController@modal')->name('modal');
     Route::POST('/grafico', 'GrupoProjetoController@grafico')->name('grafico');
     Route::POST('/criar', 'ProjetoController@store')->name('criar');

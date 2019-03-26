@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Area;
+use Illuminate\Database\Seeder;
 
 class AreasSeed extends Seeder
 {
@@ -13,15 +13,16 @@ class AreasSeed extends Seeder
     public function run()
     {
         $areas = array(
-            "Planejamento",
-            "Colaboração",
-            "Produção",
-            "Licenciamento",
-            "Avaliação",
+            "PLAN" => "Planejamento",
+            "COL" => "Colaboração",
+            "PROD" => "Produção",
+            "LIC" => "Licenciamento",
+            "AVAL" => "Avaliação",
         );
 
-        foreach ($areas as $area) {
+        foreach ($areas as $key => $area) {
             Area::create([
+                'prefixo' => $key,
                 'area' => $area,
             ]);
         }

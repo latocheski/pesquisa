@@ -9,14 +9,8 @@ class PerfilUsuario extends Model
     protected $fillable = [
         'id',
         'idUsuario',
-        'tema',
-        'rea',
-        'ensino',
-        'conhecimento',
-        'pratica',
-        'formacao',
-        'projetos',
-        'somatorio',
+        'idQuestaoPerfil',
+        'nota'
     ];
 
     protected $table = "perfil_usuarios";

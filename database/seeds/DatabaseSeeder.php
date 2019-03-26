@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EstadosSeeds::class);
         $this->call(AreasSeed::class);
         $this->call(QuestoesSeed::class);
+        $this->call(QuestoesPerfilSeed::class);
     }
 }

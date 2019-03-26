@@ -30,39 +30,39 @@ class GrupoProjetoController extends Controller
 
     public function modal(request $request)
     {
-        if ( $request->ajax() ) {
+        if ($request->ajax()) {
             $request = $request->all();
             $respostas = DB::table('avaliacao_questionarios')
-            ->select('nota', 'name', 'questao')
-            ->join('questoes', 'avaliacao_questionarios.idQuestao', 'questoes.id')
-            ->join('users', 'avaliacao_questionarios.idUsuario', 'users.id')
-            ->where('questoes.id',  '=', $request['idQuestao'])
-            ->where('idProjeto', '=', $request['idProjeto'])
-            ->get()
-            ->groupby('questao')
-            ->toarray();
-            
+                ->select('nota', 'name', 'questao', 'prefixo')
+                ->join('questoes', 'avaliacao_questionarios.idQuestao', 'questoes.id')
+                ->join('users', 'avaliacao_questionarios.idUsuario', 'users.id')
+                ->join('areas', 'questoes.idArea', 'areas.id')
+                ->where('questoes.id', '=', $request['idQuestao'])
+                ->where('idProjeto', '=', $request['idProjeto'])
+                ->get()
+                ->groupby('questao')
+                ->toarray();
+
             return response($respostas);
         }
-        return response(['msg' => 'Falha.', 'status' => 'failed']); 
+        return response(['msg' => 'Falha.', 'status' => 'failed']);
     }
 
     public function grafico(request $request)
     {
         $id = $request['id'];
-        $somatoriaGeral = 0;
         $coeficienteDiretriz = [];
         $projeto = Projeto::find($id);
         $areas = Area::all();
         $idAreaPesquisa = $request['idArea'] == null ? 0 : $request['idArea'];
+        $indicePerfilIndividual = [];
 
-        $perfilProjeto = DB::table('grupo_projetos')
-            ->select('perfil_usuarios.somatorio', 'perfil_usuarios.idUsuario')
+        $somatoriaGeral = DB::table('grupo_projetos') //dividir nota do participante pelo somatorio e atribuir ao array
+            ->select('perfil_usuarios.nota', 'perfil_usuarios.idUsuario')
             ->join('perfil_usuarios', 'grupo_projetos.idUsuario', '=', 'perfil_usuarios.idUsuario')
             ->where('idProjeto', '=', $id)
             ->where('respondido', '=', 1)
-            ->get()
-            ->toarray();
+            ->sum('nota');
 
         $respostas = DB::table('avaliacao_questionarios')
             ->select('idQuestao', 'nota', 'idUsuario', 'questoes.idArea')
@@ -73,19 +73,31 @@ class GrupoProjetoController extends Controller
             ->groupby('idUsuario')
             ->toarray();
 
-        foreach ($perfilProjeto as $key => $value) {
-            foreach ($value as $chave => $valor) {
-                if ($chave === "somatorio") {
-                    $somatoriaGeral += intval($valor);
-                }
+        $perfilProjeto = DB::table('grupo_projetos') //dividir nota do participante pelo somatorio e atribuir ao array
+            ->select('perfil_usuarios.nota', 'perfil_usuarios.idUsuario')
+            ->join('perfil_usuarios', 'grupo_projetos.idUsuario', '=', 'perfil_usuarios.idUsuario')
+            ->where('idProjeto', '=', $id)
+            ->where('respondido', '=', 1)
+            ->get()
+            ->groupby('idUsuario')
+            ->toarray();
+
+        foreach ($perfilProjeto as $idUsuario => $usuario) {
+            foreach ($usuario as $atributo => $valor) {
+                $indicePerfilIndividual[$valor->idUsuario] = 0;
+                break;
+            }
+        }
+        foreach ($perfilProjeto as $idUsuario => $usuario) {
+            foreach ($usuario as $atributo => $valor) {
+                $indicePerfilIndividual[$valor->idUsuario] += $valor->nota;
             }
         }
 
-        foreach ($perfilProjeto as $key => $value) {
-            foreach ($value as $chave => $valor) {
-                if ($chave === "somatorio") {
-                    $perfilProjeto[$key]->somatorio = intval($valor) / $somatoriaGeral;
-                }
+        foreach ($perfilProjeto as $idUsuario => $usuario) {
+            foreach ($usuario as $atributo => $valor) {
+                $indicePerfilIndividual[$valor->idUsuario] = round($indicePerfilIndividual[$valor->idUsuario] / $somatoriaGeral, 3);
+                break;
             }
         }
 
@@ -93,16 +105,18 @@ class GrupoProjetoController extends Controller
             foreach ($value as $chave => $valor) {
                 foreach ($valor as $chaveUsuario => $valorChave) {
                     $coeficienteDiretriz[$valor->idQuestao] = 0;
+                    break;
                 }
             }
         }
+        
         foreach ($respostas as $key => $value) {
             foreach ($value as $chave => $valor) {
                 foreach ($valor as $chaveUsuario => $valorChave) {
                     if ($chaveUsuario === "nota") {
-                        $coeficienteDiretriz[$valor->idQuestao] += round($this->pesquisaUsuario($valor, $perfilProjeto), 3);
+                        $coeficienteDiretriz[$valor->idQuestao] += round($this->pesquisaUsuario($valor, $indicePerfilIndividual), 3);
                     }
-                    
+
                 }
             }
         }
@@ -111,10 +125,9 @@ class GrupoProjetoController extends Controller
 
     public function pesquisaUsuario($nota, $perfil)
     {
-        foreach ($perfil as $key) {
-            if ($key->idUsuario == $nota->idUsuario) {
-                $calculo = $key->somatorio * $nota->nota;
-            
+        foreach ($perfil as $key => $indiciIndividual) {
+            if ($key == $nota->idUsuario) {
+                $calculo = $indiciIndividual * $nota->nota;
                 return $calculo;
             }
         }
@@ -159,8 +172,8 @@ class GrupoProjetoController extends Controller
         } else { //sem participantes
             DB::table('grupo_projetos')->where('idProjeto', '=', $dados['idPesquisa'])->delete(); //remove o grupo pois nenhum participante foi selecionado
             DB::table('avaliacao_questionarios')
-            ->where('idProjeto', '=', $dados['idPesquisa'])
-            ->delete(); //remove a avaliação
+                ->where('idProjeto', '=', $dados['idPesquisa'])
+                ->delete(); //remove a avaliação
         }
 
         if (!empty($novos)) { //cria novos participantes

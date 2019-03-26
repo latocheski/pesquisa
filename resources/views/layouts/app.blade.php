@@ -54,6 +54,12 @@
                                 @if(Auth::user()->adm > 0)
 								<a class="dropdown-item" href="{{route('incluir')}}">
 									{{ __('Criar Projeto') }}
+                                </a>
+                                <a class="dropdown-item" href="{{route('criardiretriz')}}">
+									{{ __('Criar Diretriz') }}
+                                </a>
+                                <a class="dropdown-item" href="{{route('listar.diretriz')}}">
+									{{ __('Editar Diretriz') }}
 								</a>
                                 <a class="dropdown-item" href="{{route('atribuir')}}">
 									{{ __('Atribuir Projeto') }}

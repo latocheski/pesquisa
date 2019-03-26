@@ -35,10 +35,13 @@
 							<div class="col-9">
 								<div class="tab-content" id="v-pills-tabContent">
 									@php ($quest = [])
+									@php ( $id = 0)
 									@foreach($questoes as $q)
 									<div class="tab-pane fade {{$index == 0 ? 'show active' : ''}}" id="v-pills-{{$q[0]->area}}" role="tabpanel" aria-labelledby="v-pills-{{$q[0]->area}}-tab">
-										@foreach($q as $pergunta)
-
+									@php ($id = 0)	
+									@foreach($q as $pergunta)
+										@php ($id++)
+										<b>Q{{$pergunta->prefixo}}{{$id}} - </b>
 										{{$pergunta->questao}}
 										@php (array_push($quest, $pergunta))
 										<br>
@@ -60,10 +63,9 @@
 	</div>
 </div>
 
-<script src="{{ asset('js/questoes.js') }}" defer></script>
+
 <script>
 	var questoes = {!!json_encode($quest, JSON_HEX_TAG) !!};
-
 </script>
-
+<script src="{{ asset('js/questoes.js') }}" defer></script>
 @endsection

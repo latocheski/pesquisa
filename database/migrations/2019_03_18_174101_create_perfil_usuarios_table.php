@@ -18,14 +18,9 @@ class CreatePerfilUsuariosTable extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('idUsuario');
             $table->foreign('idUsuario')->references('id')->on('users');
-            $table->integer('tema');
-            $table->integer('rea');
-            $table->integer('ensino');
-            $table->integer('conhecimento');
-            $table->integer('pratica');
-            $table->integer('formacao');
-            $table->integer('projetos');
-            $table->integer('somatorio');
+            $table->unsignedBigInteger('idQuestaoPerfil');
+            $table->foreign('idQuestaoPerfil')->references('id')->on('questoes_perfil');
+            $table->integer('nota');
         });
     }
 

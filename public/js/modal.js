@@ -21,23 +21,23 @@ $(document).ready(function () {
                 idProjeto: projeto
             },
             success: function (msg) {
-                dataModal(msg)
+                dataModal(msg, id)
             }
         });
 
     }
 
-    function dataModal(data) {
+    function dataModal(data, id) {
         let corpo = '';
         let titulo;
         $.each(data, function (key, item) {
-            titulo = key;
+            titulo = "<b>Q" + item[0].prefixo + id + "</b> - " + key;
             item.forEach(obj => {
                 corpo += '<tr><th scope="row">' + obj.name + '</th><td>' + obj.nota + '</td></tr>';
             });
         });
 
         $('#participantes').html(corpo);
-        $('#modal-title').text(titulo);
+        $('#modal-title').html(titulo);
     }
 });
