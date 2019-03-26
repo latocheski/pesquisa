@@ -73,7 +73,17 @@ class GrupoProjetoController extends Controller
         foreach ($respostas as $key => $value) {
             foreach ($value as $chave => $valor) {
                 foreach ($valor as $chaveUsuario => $valorChave) {
-                    $coeficienteDiretriz[$valor->idQuestao] = round($this->pesquisaUsuario($valor, $perfilProjeto), 3);
+                    $coeficienteDiretriz[$valor->idQuestao] = 0;
+                }
+            }
+        }
+        foreach ($respostas as $key => $value) {
+            foreach ($value as $chave => $valor) {
+                foreach ($valor as $chaveUsuario => $valorChave) {
+                    if ($chaveUsuario === "nota") {
+                        $coeficienteDiretriz[$valor->idQuestao] += round($this->pesquisaUsuario($valor, $perfilProjeto), 3);
+                    }
+                    
                 }
             }
         }
@@ -85,6 +95,7 @@ class GrupoProjetoController extends Controller
         foreach ($perfil as $key) {
             if ($key->idUsuario == $nota->idUsuario) {
                 $calculo = $key->somatorio * $nota->nota;
+            
                 return $calculo;
             }
         }

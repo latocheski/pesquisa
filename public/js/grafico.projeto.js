@@ -112,6 +112,7 @@ $(document).ready(function () {
         for (var i = 1; i <= 6; i++) {
             color += hex[Math.floor(Math.random() * 16)];
         }
+        color = "#d02a2a";
         return color;
     }
 
