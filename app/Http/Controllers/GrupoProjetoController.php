@@ -69,6 +69,7 @@ class GrupoProjetoController extends Controller
             ->join('questoes', 'avaliacao_questionarios.idQuestao', 'questoes.id')
             ->where('questoes.idArea', ($idAreaPesquisa == 0 ? '<>' : '='), $idAreaPesquisa)
             ->where('idProjeto', '=', $id)
+            ->where('ativo', '=', 1)
             ->get()
             ->groupby('idUsuario')
             ->toarray();
