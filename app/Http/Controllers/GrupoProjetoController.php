@@ -28,6 +28,25 @@ class GrupoProjetoController extends Controller
         return view('select', compact('projeto'));
     }
 
+    public function modal(request $request)
+    {
+        if ( $request->ajax() ) {
+            $request = $request->all();
+            $respostas = DB::table('avaliacao_questionarios')
+            ->select('nota', 'name', 'questao')
+            ->join('questoes', 'avaliacao_questionarios.idQuestao', 'questoes.id')
+            ->join('users', 'avaliacao_questionarios.idUsuario', 'users.id')
+            ->where('questoes.id',  '=', $request['idQuestao'])
+            ->where('idProjeto', '=', $request['idProjeto'])
+            ->get()
+            ->groupby('questao')
+            ->toarray();
+            
+            return response($respostas);
+        }
+        return response(['msg' => 'Falha.', 'status' => 'failed']); 
+    }
+
     public function grafico(request $request)
     {
         $id = $request['id'];

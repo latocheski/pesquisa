@@ -1,3 +1,4 @@
+@extends('modal')
 @extends('layouts.app')
 
 @section('content')
@@ -6,7 +7,7 @@
 		<div class="col text-center">
 			<h1>{{$projeto->descricao}}</h1>
 			<hr>
-			@csrf {{ method_field('SUBMIT') }}
+			@csrf {{ method_field('POST') }}
 			{!! Form::model($projeto, ['method' => 'POST', 'route' => ['grafico']]) !!}
 
 			{!! Form::hidden('id', $projeto->id) !!}
@@ -32,7 +33,11 @@
 		</div>
 	<div class="row">
 		<div class="col-md-8">
+			
+		
+		@csrf {{ method_field('POST') }}
 			<canvas id="myChart" width="400" height="200"></canvas>
+
 		</div>
 		<div class="mx-auto" style="max-width: 280px;">
 			<h1 class="text-center font-weight-bold" id="numero"></h1>
@@ -45,8 +50,10 @@
 <script src="{{ asset('js/gauge.min.js') }}"></script>
 <script>
 	var dados = {!!json_encode($coeficienteDiretriz, JSON_HEX_TAG) !!};
+	var projeto = {{$projeto->id}};
 </script>
 <script src="{{ asset('js/Chart.min.js') }}"></script>
 <script src="{{ asset('js/grafico.projeto.js') }}"></script>
+<script src="{{ asset('js/modal.js') }}"></script>
 
 @endsection

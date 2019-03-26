@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth', 'perfil']], function () {
 Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/incluir', 'ProjetoController@index')->name('incluir');
     Route::get('/selecao', 'GrupoProjetoController@selecao')->name('selecao');
+    Route::POST('/modal', 'GrupoProjetoController@modal')->name('modal');
     Route::POST('/grafico', 'GrupoProjetoController@grafico')->name('grafico');
     Route::POST('/criar', 'ProjetoController@store')->name('criar');
     Route::get('/atribuir', 'GrupoProjetoController@index')->name('atribuir');
