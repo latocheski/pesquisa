@@ -8,6 +8,15 @@
 			<div class="card">
 				<div class="card-header">Atribuir pesquisa:</div>
 				<div class="card-body">
+				<div class="row mb-2">
+                            <div class="col w-100">
+                                <div class="col-md-4 col-lg-2 float-right p-0">
+                                    <a href="{{ URL::route('incluir') }}">
+                                        <button type="button" name="teste" id="teste" class="btn btn-primary btn-md btn-block">Criar</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 					<div class="table-responsive table-striped">
 						@if($projeto->isEmpty())
 						<div class="alert alert-danger" role="alert">

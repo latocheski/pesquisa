@@ -18,6 +18,7 @@ class CreateAreasTable extends Migration
             $table->timestamps();
             $table->string('area');
             $table->string('prefixo', 500);
+            $table->boolean('ativo')->default(1);  
         });
     }
 

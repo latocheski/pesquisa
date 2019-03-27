@@ -18,7 +18,7 @@ class PerfilController extends Controller
     public function index()
     {
         $id = auth()->user()->id;
-        $questoes = QuestoesPerfil::all()->toarray();
+        $questoes = QuestoesPerfil::where('ativo', '=', 1)->get();
         $row = DB::table('perfil_usuarios')
             ->select('idQuestaoPerfil', 'nota')
             ->where('idUsuario', '=', $id)
@@ -29,6 +29,35 @@ class PerfilController extends Controller
         return view('perfil', compact('row', 'questoes'));
     }
 
+    public function atualizar()
+    {
+        $id = auth()->user()->id;
+        $perfil = DB::table('perfil_usuarios')
+            ->where('idUsuario', '=', $id)
+            ->select('idQuestaoPerfil as id')
+            ->get()->toarray();
+        $respostas = [];
+        $ids = [];
+        $responder = [];
+        $todasQuestoesPerfil = DB::table('questoes_perfil')->select('id')->where('ativo', '=', 1)->get()->toarray();
+
+        foreach ($perfil as $value) {
+            foreach ($value as $key => $valor) {
+                array_push($respostas, $valor);
+            }            
+        }
+        foreach ($todasQuestoesPerfil as $value) {
+            foreach ($value as $key => $valor) {
+                array_push($ids, $valor);
+            }            
+        }
+        $ids = array_diff($ids, $respostas);
+        
+        $questoes = QuestoesPerfil::find($ids);
+        $row = null;
+        
+        return view('perfil', compact('row', 'questoes'));
+    }
     /**
      * Show the form for creating a new resource.
      *

@@ -53,15 +53,17 @@ class GrupoProjetoController extends Controller
         $id = $request['id'];
         $coeficienteDiretriz = [];
         $projeto = Projeto::find($id);
-        $areas = Area::all();
+        $areas = Area::where('ativo','=', 1)->get();
         $idAreaPesquisa = $request['idArea'] == null ? 0 : $request['idArea'];
         $indicePerfilIndividual = [];
 
         $somatoriaGeral = DB::table('grupo_projetos') //dividir nota do participante pelo somatorio e atribuir ao array
             ->select('perfil_usuarios.nota', 'perfil_usuarios.idUsuario')
             ->join('perfil_usuarios', 'grupo_projetos.idUsuario', '=', 'perfil_usuarios.idUsuario')
+            ->join('questoes_perfil', 'perfil_usuarios.idQuestaoPerfil', '=', 'questoes_perfil.id')
             ->where('idProjeto', '=', $id)
             ->where('respondido', '=', 1)
+            ->where('questoes_perfil.ativo', '=', 1)
             ->sum('nota');
 
         $respostas = DB::table('avaliacao_questionarios')
@@ -69,20 +71,22 @@ class GrupoProjetoController extends Controller
             ->join('questoes', 'avaliacao_questionarios.idQuestao', 'questoes.id')
             ->where('questoes.idArea', ($idAreaPesquisa == 0 ? '<>' : '='), $idAreaPesquisa)
             ->where('idProjeto', '=', $id)
-            ->where('ativo', '=', 1)
+            ->where('questoes.ativo', '=', 1)
             ->get()
             ->groupby('idUsuario')
             ->toarray();
-
+        
         $perfilProjeto = DB::table('grupo_projetos') //dividir nota do participante pelo somatorio e atribuir ao array
             ->select('perfil_usuarios.nota', 'perfil_usuarios.idUsuario')
             ->join('perfil_usuarios', 'grupo_projetos.idUsuario', '=', 'perfil_usuarios.idUsuario')
+            ->join('questoes_perfil', 'perfil_usuarios.idQuestaoPerfil', '=', 'questoes_perfil.id')
             ->where('idProjeto', '=', $id)
             ->where('respondido', '=', 1)
+            ->where('questoes_perfil.ativo', '=', 1)
             ->get()
             ->groupby('idUsuario')
             ->toarray();
-
+        
         foreach ($perfilProjeto as $idUsuario => $usuario) {
             foreach ($usuario as $atributo => $valor) {
                 $indicePerfilIndividual[$valor->idUsuario] = 0;
@@ -93,8 +97,7 @@ class GrupoProjetoController extends Controller
             foreach ($usuario as $atributo => $valor) {
                 $indicePerfilIndividual[$valor->idUsuario] += $valor->nota;
             }
-        }
-
+        }        
         foreach ($perfilProjeto as $idUsuario => $usuario) {
             foreach ($usuario as $atributo => $valor) {
                 $indicePerfilIndividual[$valor->idUsuario] = round($indicePerfilIndividual[$valor->idUsuario] / $somatoriaGeral, 3);

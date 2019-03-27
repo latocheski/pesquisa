@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Area;
-use App\Questoes;
 use Illuminate\Http\Request;
 use Validator;
+use App\QuestoesPerfil;
 
-class QuestoesController extends Controller
+class QuestaoPerfil extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,20 +15,8 @@ class QuestoesController extends Controller
      */
     public function index()
     {
-        $areas = Area::all();
-        $diretriz = null;
-        return view('incluirperfil', compact('areas', 'diretriz'));
-    }
-
-    public function listar()
-    {
-        $questoes = Questoes::join('areas', 'questoes.idArea', 'areas.id')
-            ->select('areas.id', 'questao', 'area', 'questoes.id as qid', 'questoes.ativo')
-            ->get()
-            ->groupby('area')
-            ->toarray();
-
-        return view('listarDiretrizes', compact('questoes'));
+        $questoes = QuestoesPerfil::all();
+        return view('questoesperfil', compact('questoes'));
     }
 
     /**
@@ -39,7 +26,8 @@ class QuestoesController extends Controller
      */
     public function create()
     {
-        //
+        $questao = null;
+        return view('criarQuestaoPerfil', compact('questao'));
     }
 
     /**
@@ -48,14 +36,6 @@ class QuestoesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    private function validar($request)
-    {
-        $validator = Validator::make($request->all(), [
-            "questao" => "required",
-        ]);
-        return $validator;
-    }
-
     public function store(Request $request)
     {
         $validator = $this->validar($request);
@@ -65,8 +45,8 @@ class QuestoesController extends Controller
 
         $dados = $request->all();
         $dados['ativo'] = $dados['ativo'] == "on" ? 1 : 0;
-        Questoes::create($dados);
-        return redirect()->route('listar.diretriz')->with('success', 'Diretriz criada com sucesso.');
+        QuestoesPerfil::create($dados);
+        return redirect()->route('qperfil.index')->with('success', 'Questão criada com sucesso.');
     }
 
     /**
@@ -88,9 +68,8 @@ class QuestoesController extends Controller
      */
     public function edit($id)
     {
-        $diretriz = Questoes::find($id);
-        $areas = Area::all();
-        return view('incluirperfil', compact('areas', 'diretriz'));
+        $questao = QuestoesPerfil::find($id);
+        return view('criarQuestaoPerfil', compact('questao'));
     }
 
     /**
@@ -100,20 +79,26 @@ class QuestoesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    private function validar($request)
+    {
+        $validator = Validator::make($request->all(), [
+            "questao" => "required",
+        ]);
+        return $validator;
+    }
+
     public function update(Request $request, $id)
     {
         $validator = $this->validar($request);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
-        
-        $dados = $request->all();
-        $diretriz = Questoes::find($id);
-        $diretriz['idArea'] = $dados['idArea'];
-        $diretriz['questao'] = $dados['questao'];
-        $diretriz['ativo'] = $dados['ativo'] == "on" ? 1 : 0;
-        $diretriz->save();
-        return redirect()->route('listar.diretriz')->with('success', 'Diretriz atualizada com sucesso.');
+        $questao = QuestoesPerfil::find($id);
+        $questao->questao = $request['questao'];
+        $questao->ativo = $request['ativo'] == "on" ? 1 : 0;
+        $questao->save();
+        return redirect()->route('qperfil.index')->with('success', 'Questão atualizada com sucesso.');
     }
 
     /**

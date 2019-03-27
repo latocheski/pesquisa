@@ -19,6 +19,7 @@ Route::get('register', 'Auth\RegisterController@index')->name('register');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/perfil', 'PerfilController@index')->name('perfil');
+    Route::get('/atualizar', 'PerfilController@atualizar')->name('atualizar');
     Route::POST('/perfil/salvar', 'PerfilController@store')->name('perfil.salvar');
 });
 
@@ -31,6 +32,8 @@ Route::group(['middleware' => ['auth', 'perfil']], function () {
 });
 
 Route::group(['middleware' => ['admin', 'auth']], function () {
+    Route::resource('area', 'AreaController');
+    Route::resource('qperfil', 'QuestaoPerfil');
     Route::get('/incluir', 'ProjetoController@index')->name('incluir');
     Route::get('/criardiretriz', 'QuestoesController@index')->name('criardiretriz');
     Route::post('/salvardiretriz', 'QuestoesController@store')->name('salvardiretriz');

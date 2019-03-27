@@ -52,22 +52,23 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 @if(Auth::user()->adm > 0)
-								<a class="dropdown-item" href="{{route('incluir')}}">
-									{{ __('Criar Projeto') }}
-                                </a>
-                                <a class="dropdown-item" href="{{route('criardiretriz')}}">
-									{{ __('Criar Diretriz') }}
+                                <a class="dropdown-item" href="{{route('area.index')}}">
+									{{ __('Areas') }}
                                 </a>
                                 <a class="dropdown-item" href="{{route('listar.diretriz')}}">
-									{{ __('Editar Diretriz') }}
+									{{ __('Diretrizes') }}
 								</a>
                                 <a class="dropdown-item" href="{{route('atribuir')}}">
-									{{ __('Atribuir Projeto') }}
+									{{ __('Projetos') }}
+								</a>
+                                <a class="dropdown-item" href="{{route('qperfil.index')}}">
+									{{ __('Questionário Perfil') }}
 								</a>
                                 <a class="dropdown-item" href="{{route('selecao')}}">
 									{{ __('Gráfico Projeto') }}
 								</a>
-								@endif
+                                <hr>
+								@endif                                
                                 <a class="dropdown-item" href="{{route('perfil')}}">
 									{{ __('Editar Perfil') }}
 								</a>

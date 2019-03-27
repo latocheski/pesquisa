@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use DB;
+use App\PerfilUsuario;
+use App\QuestoesPerfil;
 
 class PerfilCheck
 {
@@ -22,6 +24,13 @@ class PerfilCheck
             if ($row->isEmpty() && $request->user()->adm != 1) {
                 return redirect('perfil');
             }
+            $perfil = PerfilUsuario::where('idUsuario', '=', $id)
+            ->get();
+            $questoesPerfil = QuestoesPerfil::where('ativo', '=', 1)->get();
+            
+            if($questoesPerfil->count() > $perfil->count() && $request->user()->adm != 1) {
+                return redirect('atualizar');
+            }            
         }
         return $next($request);
     }

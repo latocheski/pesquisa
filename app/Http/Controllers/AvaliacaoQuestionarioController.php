@@ -20,7 +20,8 @@ class AvaliacaoQuestionarioController extends Controller
         $questoes = DB::table("questoes")
             ->select('questoes.*', 'questoes.id as idq', 'areas.area as area', 'areas.prefixo')
             ->join('areas', 'questoes.idArea', '=', 'areas.id')
-            ->where('ativo', '=', 1)
+            ->where('questoes.ativo', '=', 1)
+            ->where('areas.ativo', '=', 1)
             ->get()
             ->groupBy('area');
 
