@@ -15,7 +15,7 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             method: "POST",
-            url: "/modal/",
+            url: "/modal",
             data: {
                 idQuestao: id,
                 idProjeto: projeto
