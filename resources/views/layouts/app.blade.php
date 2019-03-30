@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('iREAM', 'iREAM') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -27,7 +27,7 @@
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('iREAM', ' - iREAM -  ') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -53,7 +53,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 @if(Auth::user()->adm > 0)
                                 <a class="dropdown-item" href="{{route('area.index')}}">
-									{{ __('Areas') }}
+									{{ __('Áreas') }}
                                 </a>
                                 <a class="dropdown-item" href="{{route('listar.diretriz')}}">
 									{{ __('Diretrizes') }}
@@ -62,10 +62,10 @@
 									{{ __('Projetos') }}
 								</a>
                                 <a class="dropdown-item" href="{{route('qperfil.index')}}">
-									{{ __('Questionário Perfil') }}
+									{{ __('Questionário do Perfil') }}
 								</a>
                                 <a class="dropdown-item" href="{{route('selecao')}}">
-									{{ __('Gráfico Projeto') }}
+									{{ __('Índice do Projeto') }}
 								</a>
                                 <hr>
 								@endif                                

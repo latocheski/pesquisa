@@ -66,7 +66,7 @@ $(document).ready(function () {
       gauge.set(isNaN(indice) ? 0 : indice);
       target.title = indice.toFixed(2);      
 
-    $("#numero").append("Índice = " + (isNaN(indice) ? 0 : indice.toFixed(2)));
+    $("#numero").append("iREAM = " + (isNaN(indice) ? 0 : indice.toFixed(2)));
 
     myChart = new Chart(ctx, {
         type: 'bar',

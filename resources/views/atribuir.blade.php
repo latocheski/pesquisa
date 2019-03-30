@@ -6,7 +6,7 @@
 		<div class="col-md-8">
 			@include('alertas')
 			<div class="card">
-				<div class="card-header">Atribuir pesquisa:</div>
+				<div class="card-header">Projetos:</div>
 				<div class="card-body">
 				<div class="row mb-2">
                             <div class="col w-100">
