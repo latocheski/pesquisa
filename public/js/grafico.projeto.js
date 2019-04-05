@@ -7,16 +7,14 @@ $(document).ready(function () {
     var gauge;  
     var colunas = [],
         valores = []
-    cores = [], indice = 0;
+    cores = [];
 
     $.each(dados, function (key, value) {
         colunas.push(key);
         valores.push(value)
         cores.push(getRandomColorHex());
-        indice += value;
     });
 
-    indice /= (valores.length);
 
     var opts = {
         angle: -0.1, 

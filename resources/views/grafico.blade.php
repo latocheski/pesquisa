@@ -49,8 +49,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
 <script src="{{ asset('js/gauge.min.js') }}"></script>
 <script>
-	var dados = {!!json_encode($coeficienteDiretriz, JSON_HEX_TAG) !!};
-	var projeto = {{$projeto->id}};
+	let dados = {!!json_encode($coeficienteDiretriz, JSON_HEX_TAG) !!};
+	let projeto = {{$projeto->id}};
+	let indice = {!!json_encode($irea, JSON_HEX_TAG) !!};
 </script>
 <script src="{{ asset('js/Chart.min.js') }}"></script>
 <script src="{{ asset('js/grafico.projeto.js') }}"></script>

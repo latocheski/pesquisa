@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Area;
 use App\GrupoProjeto;
 use App\Projeto;
+use App\Questoes;
 use App\User;
 use DB;
 use Illuminate\Http\Request;
@@ -53,9 +54,25 @@ class GrupoProjetoController extends Controller
         $id = $request['id'];
         $coeficienteDiretriz = [];
         $projeto = Projeto::find($id);
-        $areas = Area::where('ativo','=', 1)->get();
+        $areas = Area::where('ativo', '=', 1)->get();
         $idAreaPesquisa = $request['idArea'] == null ? 0 : $request['idArea'];
         $indicePerfilIndividual = [];
+        $questoesPorArea = Questoes::join('areas', 'questoes.idArea', 'areas.id')
+            ->where('questoes.idArea', ($idAreaPesquisa == 0 ? '<>' : '='), $idAreaPesquisa)
+            ->where('questoes.ativo', '=', '1')
+            ->select('areas.id as area', 'questoes.id as questao')
+            ->get()
+            ->groupby('area')
+            ->toarray();
+        $mediaPorArea = Area::where('ativo', '=', 1)
+            ->where('id', ($idAreaPesquisa == 0 ? '<>' : '='), $idAreaPesquisa) 
+            ->select('id')
+            ->get()
+            ->keyBy('id')
+            ->toarray();
+        foreach ($mediaPorArea as $key => $value) {
+            $mediaPorArea[$key] = 0;
+        }
 
         $somatoriaGeral = DB::table('grupo_projetos') //dividir nota do participante pelo somatorio e atribuir ao array
             ->select('perfil_usuarios.nota', 'perfil_usuarios.idUsuario')
@@ -75,7 +92,7 @@ class GrupoProjetoController extends Controller
             ->get()
             ->groupby('idUsuario')
             ->toarray();
-        
+
         $perfilProjeto = DB::table('grupo_projetos') //dividir nota do participante pelo somatorio e atribuir ao array
             ->select('perfil_usuarios.nota', 'perfil_usuarios.idUsuario')
             ->join('perfil_usuarios', 'grupo_projetos.idUsuario', '=', 'perfil_usuarios.idUsuario')
@@ -86,7 +103,7 @@ class GrupoProjetoController extends Controller
             ->get()
             ->groupby('idUsuario')
             ->toarray();
-        
+
         foreach ($perfilProjeto as $idUsuario => $usuario) {
             foreach ($usuario as $atributo => $valor) {
                 $indicePerfilIndividual[$valor->idUsuario] = 0;
@@ -97,7 +114,7 @@ class GrupoProjetoController extends Controller
             foreach ($usuario as $atributo => $valor) {
                 $indicePerfilIndividual[$valor->idUsuario] += $valor->nota;
             }
-        }        
+        }
         foreach ($perfilProjeto as $idUsuario => $usuario) {
             foreach ($usuario as $atributo => $valor) {
                 $indicePerfilIndividual[$valor->idUsuario] = round($indicePerfilIndividual[$valor->idUsuario] / $somatoriaGeral, 3);
@@ -113,7 +130,7 @@ class GrupoProjetoController extends Controller
                 }
             }
         }
-        
+
         foreach ($respostas as $key => $value) {
             foreach ($value as $chave => $valor) {
                 foreach ($valor as $chaveUsuario => $valorChave) {
@@ -124,7 +141,21 @@ class GrupoProjetoController extends Controller
                 }
             }
         }
-        return view('grafico', compact('coeficienteDiretriz', 'projeto', 'areas', 'idAreaPesquisa'));
+
+        foreach ($questoesPorArea as $array) {
+            foreach ($array as $key => $v) {
+                $mediaPorArea[$v['area']] += $coeficienteDiretriz[$v['questao']];
+            }
+            $mediaPorArea[$array[0]['area']] /= count($array);
+        }
+
+        $irea = 0;
+        foreach ($mediaPorArea as $key => $value) {
+            $irea += $value;
+        }
+        $irea /= count($mediaPorArea);
+
+        return view('grafico', compact('coeficienteDiretriz', 'projeto', 'areas', 'idAreaPesquisa', 'irea'));
     }
 
     public function pesquisaUsuario($nota, $perfil)
