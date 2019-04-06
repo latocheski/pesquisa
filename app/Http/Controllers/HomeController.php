@@ -27,10 +27,9 @@ class HomeController extends Controller
         $currentuserid = Auth::user()->id;
 
         $projetos = DB::table("grupo_projetos")
-            ->select('projetos.descricao as descricao', 'projetos.instituicao as instituicao', 'projetos.id as idProjeto', 'grupo_projetos.*')
+            ->select('projetos.descricao as descricao', 'projetos.instituicao as instituicao', 'projetos.id as idProjeto', 'grupo_projetos.*', 'projetos.ativo')
             ->join('projetos', 'grupo_projetos.idProjeto', '=', 'projetos.id')
             ->where('grupo_projetos.idUsuario', '=', $currentuserid)
-            ->where('grupo_projetos.respondido', '=', '0')
             ->paginate(5);
 
         return view('home', compact('projetos'));

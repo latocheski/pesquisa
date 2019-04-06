@@ -10,7 +10,6 @@
 					@csrf
 					<div class="card-body mx-auto" style="max-width: 430px;">
 						<div style="overflow-x:auto;">
-
 							<select name="id[]" id='options' multiple='multiple'>
 								@foreach($usuarios as $usuario)
 								<option value='{{$usuario->id}}'>{{$usuario->name}}</option>

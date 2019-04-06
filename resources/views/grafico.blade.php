@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container border rounded">
+<div class="container shadow p-3 mb-5 bg-white rounded">
 	<div class="row mb-5">
 		<div class="col text-center">
 			<h1>{{$projeto->descricao}}</h1>

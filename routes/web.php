@@ -24,6 +24,8 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::group(['middleware' => ['auth', 'perfil']], function () {
+    Route::resource('avaliacao', 'AvaliacaoQuestionarioController');
+    Route::resource('questionario', 'AvaliacaoQuestionarioController');
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::POST('/avaliar/{id}', 'AvaliacaoQuestionarioController@index')->name('avaliar');
@@ -34,6 +36,7 @@ Route::group(['middleware' => ['auth', 'perfil']], function () {
 Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::resource('area', 'AreaController');
     Route::resource('qperfil', 'QuestaoPerfil');
+    Route::resource('projeto', 'ProjetoController');
     Route::get('/incluir', 'ProjetoController@index')->name('incluir');
     Route::get('/criardiretriz', 'QuestoesController@index')->name('criardiretriz');
     Route::post('/salvardiretriz', 'QuestoesController@store')->name('salvardiretriz');

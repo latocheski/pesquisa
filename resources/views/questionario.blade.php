@@ -5,8 +5,13 @@
 	<div class="row justify-content-center">
 		<div class="col-md-9">
 			<div class="card">
-				<div class="card-header">Atribua um valor para os seguintes itens:</div>
-				<form method="post" action="{{ route('enviar') }}">
+				<div class="card-header">
+					<h4>{{$projeto->descricao}}</h4>
+					Atribua um valor para os seguintes itens:
+				</div>
+				<form method="POST" action="{{is_null($novo) ? route('enviar') : route('questionario.update', $idP)}}">
+					{{csrf_field()}}
+                    {{is_null($novo) ?  method_field('POST') : method_field('PUT') }}
 					@csrf
 					<div class="card-body">
 						<?php $index = 0;?>
@@ -65,7 +70,8 @@
 
 
 <script>
-	var questoes = {!!json_encode($quest, JSON_HEX_TAG) !!};
+	let questoes = {!!json_encode($quest, JSON_HEX_TAG) !!};
+	let novo = {!!json_encode($novo, JSON_HEX_TAG) !!};
 </script>
 <script src="{{ asset('js/questoes.js') }}" defer></script>
 @endsection

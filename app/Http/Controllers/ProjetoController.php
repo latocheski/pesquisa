@@ -15,7 +15,8 @@ class ProjetoController extends Controller
      */
     public function index()
     {
-        return view('incluirpesquisa');
+        $projeto = null;
+        return view('incluirpesquisa', compact('projeto'));
     }
 
     /**
@@ -51,6 +52,7 @@ class ProjetoController extends Controller
         }
 
         $dados = $request->all();
+        $dados['ativo'] = 1;
         Projeto::create($dados);
         return redirect()->route('atribuir')->with('success', 'Projeto criado com sucesso.');
     }
@@ -74,7 +76,8 @@ class ProjetoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $projeto = Projeto::find($id);
+        return view('incluirpesquisa', compact('projeto'));
     }
 
     /**
@@ -86,7 +89,17 @@ class ProjetoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = $this->validar($request);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+        $dados = Projeto::find($id);
+        $dados->instituicao = $request['instituicao'];
+        $dados->descricao = $request['descricao'];
+        $dados->ativo = $request['ativo'] == "on" ? 1 : 0;
+        $dados->save();
+        
+        return redirect()->route('atribuir')->with('success', 'Projeto editado com sucesso.');
     }
 
     /**

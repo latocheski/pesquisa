@@ -57,6 +57,7 @@ class GrupoProjetoController extends Controller
         $areas = Area::where('ativo', '=', 1)->get();
         $idAreaPesquisa = $request['idArea'] == null ? 0 : $request['idArea'];
         $indicePerfilIndividual = [];
+        $irea = 0;
         $questoesPorArea = Questoes::join('areas', 'questoes.idArea', 'areas.id')
             ->where('questoes.idArea', ($idAreaPesquisa == 0 ? '<>' : '='), $idAreaPesquisa)
             ->where('questoes.ativo', '=', '1')
@@ -65,7 +66,7 @@ class GrupoProjetoController extends Controller
             ->groupby('area')
             ->toarray();
         $mediaPorArea = Area::where('ativo', '=', 1)
-            ->where('id', ($idAreaPesquisa == 0 ? '<>' : '='), $idAreaPesquisa) 
+            ->where('id', ($idAreaPesquisa == 0 ? '<>' : '='), $idAreaPesquisa)
             ->select('id')
             ->get()
             ->keyBy('id')
@@ -141,19 +142,19 @@ class GrupoProjetoController extends Controller
                 }
             }
         }
-
-        foreach ($questoesPorArea as $array) {
-            foreach ($array as $key => $v) {
-                $mediaPorArea[$v['area']] += $coeficienteDiretriz[$v['questao']];
+        if ($coeficienteDiretriz != null) {
+            foreach ($questoesPorArea as $array) {
+                foreach ($array as $key => $v) {
+                    $mediaPorArea[$v['area']] += $coeficienteDiretriz[$v['questao']];
+                }
+                $mediaPorArea[$array[0]['area']] /= count($array);
             }
-            $mediaPorArea[$array[0]['area']] /= count($array);
-        }
 
-        $irea = 0;
-        foreach ($mediaPorArea as $key => $value) {
-            $irea += $value;
+            foreach ($mediaPorArea as $key => $value) {
+                $irea += $value;
+            }
+            $irea /= count($mediaPorArea);
         }
-        $irea /= count($mediaPorArea);
 
         return view('grafico', compact('coeficienteDiretriz', 'projeto', 'areas', 'idAreaPesquisa', 'irea'));
     }
@@ -177,7 +178,9 @@ class GrupoProjetoController extends Controller
     {
         $usuarios = User::where('adm', '<>', '1')->get();
         $grupo = DB::table('grupo_projetos')->where('idProjeto', '=', $idatual)->get();
-        return view('participantes', compact('usuarios', 'grupo', 'idatual'));
+        $projeto = Projeto::find($idatual);
+
+        return view('participantes', compact('usuarios', 'grupo', 'idatual', 'projeto'));
     }
 
     /**

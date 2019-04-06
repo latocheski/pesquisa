@@ -18,6 +18,7 @@ class CreateProjetosTable extends Migration
             $table->timestamps();
             $table->string('descricao');
             $table->string('instituicao');
+            $table->boolean('ativo')->default(1);
         });
     }
 

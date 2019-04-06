@@ -3,9 +3,9 @@
 @section('content')
 <div class="container-fluid">
 	<div class="row justify-content-center">
-		<div class="col-md-6">
+		<div class="col-md-6 shadow p-3 mb-5 bg-white rounded">
 
-			<div class="card">
+			<div class="card border-0">
 				<div class="card-header">Selecionar Projeto:</div>
 				<div class="card-body">
 					<div class="table-responsive table-striped">

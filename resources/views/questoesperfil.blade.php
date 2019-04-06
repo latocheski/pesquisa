@@ -3,9 +3,9 @@
 @section('content')
 <div class="container-fluid">
 	<div class="row justify-content-center">
-		<div class="col-md-8">
-			<div class="card">
-				<div class="card-header">Questionário:</div>
+		<div class="col-md-8 shadow p-3 mb-5 bg-white rounded">
+			<div class="card border-0">
+				<div class="card-header"><h4>Questionário:</h4></div>
                 <div class="card-body">
                 @include('alertas')
                 <div class="form-groupp">
